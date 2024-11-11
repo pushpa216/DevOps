@@ -1,0 +1,20 @@
+pipeline {
+    agent {
+        label 'slave-server'
+    }
+    stages {
+        stage('Copy Archive') {
+           steps {
+            copyArtifacts filter: 'target//*.war', projectName:                       'testpipeline-library', target: 'lib/wars'
+           }
+        }
+        stage('Deploy') {
+            steps {
+                deploy adapters: [tomcat9(url: 'http://172.31.89.60:8080',
+                            credentialsId: 'tomcat-server')],
+                        war: '**/*.war',
+                        contextPath: 'app1'
+            }
+        }
+    }
+}

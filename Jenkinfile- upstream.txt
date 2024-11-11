@@ -1,0 +1,48 @@
+@Library('shared-library') _
+pipeline {
+    agent {
+        label 'slave-server'
+    }
+    
+    tools {
+        maven 'maven'
+    }
+    
+    stages {
+        stage("Git Checkout") {
+            steps {
+            git branch: 'main', url: 'https://github.com/Nandini-1428/test-petclinic-app.git'
+            }
+        }
+        stage('clean') {
+            steps {
+                mavenClean()
+            }
+        }
+        stage('Compile') {
+            steps {
+             mavenCompile()
+           }
+        }
+        stage('Build') {
+            steps {
+               mavenBuild()
+            }
+            post {
+               always {
+                 archiveArtifacts artifacts: 'target//*.war', onlyIfSuccessful: true
+                }
+            }
+        }
+        stage('triggerDeployjob') {
+            steps {
+                build job: "deploy-pipeline-job" , wait: true
+            }
+            post {
+                success {
+                    emailext body: 'Petclinic Applicaion Build  has been deployed successfully', subject: 'Build Status : Success', to: 'nandinimurthy56@gmail.com'
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,32 @@
+pipline {
+    agent {
+        label 'slave-lable'
+    }
+    stages {
+        stage('git checkout') {
+            steps {
+                git branch: , url :
+            }
+        }
+        stage('build') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+        stage('sonarqube Analysis') {
+            steps {
+                sh ''
+            }
+        }
+        stage('test') {
+            steps {
+                sh 'test cases'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'cmd to deploy to test env'
+            }
+        }
+    }
+}

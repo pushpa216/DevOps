@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    stages {
+        stage("builds"){
+            steps {
+                echo 'building the application'
+            }
+        }
+
+        stage("test"){
+            when {
+                expression {
+                    BRANCH_NAME == 'dev'  ||  BRANCH_NAME == 'master'
+                    }
+            }
+            steps {
+                echo 'testing the application'
+            }
+        }
+        stage("deploy"){
+            steps {
+                echo "deploying the application"
+            }
+        }
+        stage("sucess"){
+            steps {
+                echo "Applicatio succesfully deployed"
+            }
+        }
+    }
+}
+
+
+
+
+squ_fbb9f49f7a5fd4d2c59dd430b2d6a3b61a2b5a90
